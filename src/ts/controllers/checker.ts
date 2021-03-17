@@ -1,6 +1,7 @@
 import {
   removeCheckerFromField,
   moveCheckerToField,
+  skipElement,
 } from "../view/checkerView";
 import checkerState, { checkIfPlayerWon } from "../checkerState";
 
@@ -165,7 +166,110 @@ const moveTwoSpaces = ({
   fieldElTo,
   coordinateFrom,
   sideFrom,
-}: Move) => {};
+}: Move) => {
+  if (!sideFrom) return false;
+
+  if (
+    (moveDistance === -22 && sideFrom === "red") ||
+    (moveDistance === -22 && checkerElFrom.classList.contains("king"))
+  ) {
+    const coordinateSkipped = coordinateFrom + 11;
+
+    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.blackCheckersCount--;
+    skipElement({
+      coordinateFrom,
+      coordinateSkipped,
+      fieldElTo,
+      checkerElFrom,
+    });
+
+    return true;
+  }
+
+  if (
+    (moveDistance === -18 && sideFrom === "red") ||
+    (moveDistance === -18 && checkerElFrom.classList.contains("king"))
+  ) {
+    const coordinateSkipped = coordinateFrom + 9;
+
+    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.blackCheckersCount--;
+    skipElement({
+      coordinateFrom,
+      coordinateSkipped,
+      fieldElTo,
+      checkerElFrom,
+    });
+
+    return true;
+  }
+
+  if (moveDistance === 22 && sideFrom === "black") {
+    const coordinateSkipped = coordinateFrom - 11;
+
+    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.redCheckersCount--;
+    skipElement({
+      coordinateFrom,
+      coordinateSkipped,
+      fieldElTo,
+      checkerElFrom,
+    });
+
+    return true;
+  }
+
+  if (moveDistance === 18 && sideFrom === "black") {
+    const coordinateSkipped = coordinateFrom - 9;
+
+    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.redCheckersCount--;
+    skipElement({
+      coordinateFrom,
+      coordinateSkipped,
+      fieldElTo,
+      checkerElFrom,
+    });
+
+    return true;
+  }
+
+  return false;
+};
+
+const checkIsSkipAllowed = (coordinateSkipped: number, sideFrom: string) => {
+  const fieldSkippedEl = <HTMLDivElement>(
+    document.querySelector(`[data-coordinate='${coordinateSkipped}']`)
+  );
+  const checkerSkippedEl = <HTMLDivElement>fieldSkippedEl.firstElementChild;
+
+  if (!checkerSkippedEl) {
+    alert("Not moving by rules");
+    return false;
+  }
+
+  const sideSkipped = checkerSkippedEl.dataset.fieldside ? "black" : "red";
+
+  if (sideFrom === sideSkipped) {
+    alert("Cannot skip element of same color");
+    return false;
+  }
+
+  return true;
+};
 
 const isMoveValid = (moveDistance: number, moveDistanceOptions: number[]) => {
   return moveDistanceOptions.some((distance) => {

@@ -17,3 +17,21 @@ export const moveCheckerToField = (
   checkerFrom.classList.add("active");
   fieldTo.append(checkerFrom);
 };
+
+interface SkipElement {
+  coordinateFrom: number;
+  coordinateSkipped: number;
+  fieldElTo: HTMLDivElement;
+  checkerElFrom: HTMLDivElement;
+}
+
+export const skipElement = ({
+  coordinateFrom,
+  coordinateSkipped,
+  checkerElFrom,
+  fieldElTo,
+}: SkipElement) => {
+  removeCheckerFromField(coordinateFrom);
+  removeCheckerFromField(coordinateSkipped);
+  moveCheckerToField(fieldElTo, checkerElFrom);
+};
