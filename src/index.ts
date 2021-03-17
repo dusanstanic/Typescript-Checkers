@@ -1,3 +1,4 @@
 import "./sass/main.scss";
+import boardCtrl from "./ts/controllers/board";
 
-console.log("index.js");
+boardCtrl();
