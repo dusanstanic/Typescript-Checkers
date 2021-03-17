@@ -1,19 +1,32 @@
 .player {
   grid-column: sidebar-start / full-end;
 
-  padding: 1rem;
-  background: rgb(232, 222, 232);
+  padding: 2rem;
+  background: $color-grey-light-1;
+
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-row-gap: 2.5rem;
 
   &__stats {
     display: grid;
+    grid-column: 2 / -2;
+
     grid-template-columns: 1fr 1fr;
   }
 
   &__stat {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    padding-left: 1rem;
+
+    &:not(:last-child) {
+      border-right: 0.1rem solid black;
+      padding: 0;
+    }
   }
 
   &__name {
+    font-size: 2rem;
     text-align: center;
     color: rgb(255, 0, 0);
 
@@ -24,7 +37,8 @@
 
   &__turn {
     color: rgb(255, 0, 0);
-    font-size: 2rem;
+    font-size: 1.5rem;
+    grid-column: 2 / -2;
 
     &--black {
       color: $color-black;

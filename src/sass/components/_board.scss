@@ -1,12 +1,10 @@
 .board {
-  grid-column: col-start 1 / col-end 15;
+  grid-column: full-start / full-end;
 
-  border: 1rem solid black;
-
-  background: rgb(236, 228, 228);
+  border: 1rem solid $color-black;
+  background: $color-grey-light-1;
 
   display: grid;
-
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
 }
