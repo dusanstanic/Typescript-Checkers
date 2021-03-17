@@ -54,8 +54,7 @@ const controller = () => {
       const event = <DragEvent>e;
       const target = <HTMLDivElement>event.target;
 
-      console.log(isMoveAllowed(event, target));
-      checkIfPlayerWon();
+      isMoveAllowed(event, target);
     });
   });
 
@@ -70,8 +69,6 @@ const controller = () => {
 };
 
 const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
-  console.log(checkerState);
-
   const fieldElTo = <HTMLDivElement>toEl.closest(".checker__field");
   const checkerElTo = <HTMLDivElement>fieldElTo.firstElementChild;
 
@@ -110,7 +107,16 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
     ) {
       checkerState.movesMade++;
 
-      console.log(checkerState);
+      if (sideFrom === "black" && coordinateTo >= 10 && coordinateTo <= 17) {
+        checkerElFrom.classList.add("king");
+      }
+
+      if (sideFrom === "red" && coordinateTo >= 80 && coordinateTo <= 87) {
+        checkerElFrom.classList.add("king");
+      }
+
+      checkIfPlayerWon();
+
       return true;
     }
 
@@ -231,7 +237,10 @@ const moveTwoSpaces = ({
     return true;
   }
 
-  if (moveDistance === 22 && sideFrom === "black") {
+  if (
+    (moveDistance === 22 && sideFrom === "black") ||
+    (moveDistance === 22 && checkerElFrom.classList.contains("king"))
+  ) {
     const coordinateSkipped = coordinateFrom - 11;
 
     if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
@@ -249,7 +258,10 @@ const moveTwoSpaces = ({
     return true;
   }
 
-  if (moveDistance === 18 && sideFrom === "black") {
+  if (
+    (moveDistance === 18 && sideFrom === "black") ||
+    (moveDistance === 18 && checkerElFrom.classList.contains("king"))
+  ) {
     const coordinateSkipped = coordinateFrom - 9;
 
     if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {

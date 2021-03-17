@@ -38,7 +38,7 @@ export const finishTurn = () => {
 };
 
 export const resetCheckerState = () => {
-  checkerState = { ...checkerInitialState };
+  checkerState = cloneCheckerState(checkerInitialState);
 };
 
 export const updateCheckerUI = () => {
@@ -57,6 +57,26 @@ export const updateCheckerUI = () => {
   const checkerAmount = document.querySelectorAll(".player__amount");
   checkerAmount[0].textContent = "Total: " + checkerState.redCheckersCount;
   checkerAmount[1].textContent = "Total: " + checkerState.blackCheckersCount;
+};
+
+const cloneCheckerState = (inObject: any) => {
+  let outObject: any;
+  let value;
+  let key;
+
+  if (typeof inObject !== "object" || null) {
+    return inObject;
+  }
+
+  outObject = Array.isArray(inObject) ? [] : {};
+
+  for (key in inObject) {
+    value = inObject[key];
+
+    outObject[key] = cloneCheckerState(value);
+  }
+
+  return outObject;
 };
 
 export default checkerState;

@@ -23,8 +23,6 @@ export const renderChessField = (
 };
 
 export const renderChessFields = (rows = 8, columns = 8) => {
-  console.log(checkerState);
-
   for (let i = 1; i <= rows; i++) {
     const type = i >= 6 ? "black" : "red";
     const rowStartsWithChecker = i % 2 === 0;
