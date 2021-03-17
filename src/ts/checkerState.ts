@@ -1,4 +1,13 @@
-const checkerState = {
+interface CheckerState {
+  moveHistory: string[];
+  movesMade: number;
+  activePlayer: string;
+  redCheckersCount: number;
+  blackCheckersCount: number;
+}
+
+const checkerState: CheckerState = {
+  moveHistory: [],
   movesMade: 0,
   activePlayer: "red",
   redCheckersCount: 0,

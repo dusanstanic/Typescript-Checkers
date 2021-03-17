@@ -1,4 +1,9 @@
+import {
+  removeCheckerFromField,
+  moveCheckerToField,
+} from "../view/checkerView";
 import checkerState, { checkIfPlayerWon } from "../checkerState";
+
 interface MoveChecker {
   coordinateFrom: number;
   coordinateTo: number;
@@ -68,6 +73,11 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   const checkerElFrom = <HTMLDivElement>fieldElFrom.firstElementChild;
   const sideFrom = checkerElFrom.dataset.fieldside ? "black" : "red";
 
+  if (checkerState.moveHistory.pop() === "one") {
+    alert("Cannot move anymore end turn");
+    return false;
+  }
+
   if (!fieldToHasChecker) {
     if (
       moveChecker({
@@ -134,6 +144,18 @@ const moveSpace = ({
   fieldElTo,
   coordinateFrom,
 }: Move) => {
+  if (checkerState.movesMade > 0) {
+    alert(
+      "Cannot move by one space anymore check and see if skips are possible end turn if not"
+    );
+    return false;
+  }
+
+  checkerState.moveHistory.push("one");
+
+  removeCheckerFromField(coordinateFrom);
+  moveCheckerToField(fieldElTo, checkerElFrom);
+
   return true;
 };
 
