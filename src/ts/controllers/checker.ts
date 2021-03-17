@@ -77,15 +77,14 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   const fieldToHasChecker =
     fieldElTo.dataset.isCheckerField! === "true" ? true : false;
 
-  console.log(fieldElTo.dataset);
-
-  console.log(fieldToHasChecker);
-
   const fieldElFrom = <HTMLDivElement>(
     document.querySelector(`[data-coordinate='${coordinateFrom}']`)
   );
   const checkerElFrom = <HTMLDivElement>fieldElFrom.firstElementChild;
-  const sideFrom = checkerElFrom.dataset.fieldside ? "black" : "red";
+
+  console.log(checkerElFrom.dataset);
+
+  const sideFrom = checkerElFrom.dataset.fieldSide ? "black" : "red";
 
   const activePlayer = checkerState.activePlayer;
 
@@ -297,7 +296,7 @@ const checkIsSkipAllowed = (coordinateSkipped: number, sideFrom: string) => {
     return false;
   }
 
-  const sideSkipped = checkerSkippedEl.dataset.fieldside ? "black" : "red";
+  const sideSkipped = checkerSkippedEl.dataset.fieldSide ? "black" : "red";
 
   if (sideFrom === sideSkipped) {
     alert("Cannot skip element of same color");

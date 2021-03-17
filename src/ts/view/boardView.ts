@@ -22,7 +22,7 @@ export const renderChessField = (
 
     markup = `
         <div class="checker__field" data-coordinate=${coordinate} data-is-checker-field=${isCheckerField}>
-            <img src="${src}" draggable="true" class="checker" data-fieldSide=${fieldSide}></img>
+            <img src="${src}" draggable="true" class="checker" data-field-side=${fieldSide}></img>
         </div>`;
   }
 
