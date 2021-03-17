@@ -14,10 +14,12 @@ html {
 body {
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: 85vh 10vh;
+  grid-template-rows: 80vh auto;
   grid-template-columns:
-    [full-start]
     minmax(4rem, 1fr)
+    [sidebar-start]
+    minmax(10rem, 16rem)
+    [sidebar-end full-start]
     repeat(15, [col-start] minmax(min-content, 8rem) [col-end])
     minmax(4rem, 1fr)
     [full-end];
