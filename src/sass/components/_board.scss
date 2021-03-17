@@ -1,7 +1,8 @@
 .board {
   grid-column: col-start 1 / col-end 15;
 
-  padding: 1rem;
+  border: 1rem solid black;
+
   background: rgb(236, 228, 228);
 
   display: grid;

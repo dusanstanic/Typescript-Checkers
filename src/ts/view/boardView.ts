@@ -1,9 +1,12 @@
 import elements from "../base/boardBase";
 import checkerState from "../checkerState";
 
+import redChecker from "../../images/redChecker.png";
+import blackChecker from "../../images/blackChecker.png";
+
 export const renderChessField = (
   isCheckerField: boolean,
-  side: string = "red",
+  side: string,
   coordinate = "1"
 ) => {
   let markup = `
@@ -12,10 +15,14 @@ export const renderChessField = (
 
   if (isCheckerField) {
     const fieldSide = side === "black" ? "black" : "";
+    let src = redChecker;
+    if (side == "black") {
+      src = blackChecker;
+    }
 
     markup = `
         <div class="checker__field" data-coordinate=${coordinate} data-isCheckerField=${isCheckerField}>
-            <div draggable="true" class="checker checker--${fieldSide}" data-fieldSide=${fieldSide}></div>
+            <img src="${src}" draggable="true" class="checker checker--${fieldSide}" data-fieldSide=${fieldSide}></img>
         </div>`;
   }
 
