@@ -1,0 +1,10 @@
+.board {
+  grid-column: col-start 1 / col-end 15;
+
+  background: wheat;
+
+  display: grid;
+
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
