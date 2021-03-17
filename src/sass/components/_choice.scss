@@ -3,17 +3,23 @@
   grid-row: 1 / -1;
 
   background: rgb(236, 228, 228);
+  padding: 1rem;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
 
+  @include respond(tab-port) {
+    flex-direction: row;
+    grid-row: 1 / span 1;
+  }
+
   &__item {
-    width: 70%;
+    width: 80%;
     text-align: center;
     position: relative;
-    padding-bottom: 70%;
+    padding-bottom: 80%;
     border-radius: 50%;
     border: none;
     overflow: hidden;
@@ -24,6 +30,16 @@
 
     transition: all 0.3s;
     cursor: pointer;
+
+    @include respond(tab-port) {
+      width: 8%;
+      padding: 8%;
+    }
+
+    @include respond(phone) {
+      width: 12%;
+      padding: 12%;
+    }
 
     &:focus {
       outline: none;

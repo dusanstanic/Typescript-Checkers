@@ -23,6 +23,26 @@ body {
     minmax(10rem, 16rem)
     [sidebar-end full-start]
     repeat(15, [col-start] minmax(min-content, 7rem) [col-end])
-    minmax(4rem, 1fr)
-    [full-end];
+    [full-end]
+    minmax(4rem, 1fr);
+
+  @include respond(tab-port) {
+    grid-template-rows: 15vh 75vh auto;
+
+    grid-template-columns:
+      minmax(4rem, 1fr)
+      [sidebar-start full-start]
+      repeat(15, [col-start] minmax(min-content, 7rem) [col-end])
+      [sidebar-end full-end]
+      minmax(4rem, 1fr);
+  }
+
+  @include respond(phone) {
+    grid-template-rows: 15vh 75vh auto;
+
+    grid-template-columns:
+      [sidebar-start full-start]
+      repeat(15, [col-start] minmax(min-content, 7rem) [col-end])
+      [sidebar-end full-end];
+  }
 }
