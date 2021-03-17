@@ -3,7 +3,8 @@ import {
   moveCheckerToField,
   skipElement,
 } from "../view/checkerView";
-import checkerState, { checkIfPlayerWon } from "../checkerState";
+import checkerState, { checkIfPlayerWon, finishTurn } from "../checkerState";
+import choiceElements from "../base/choiceBase";
 
 interface MoveChecker {
   coordinateFrom: number;
@@ -53,13 +54,24 @@ const controller = () => {
       const event = <DragEvent>e;
       const target = <HTMLDivElement>event.target;
 
-      isMoveAllowed(event, target);
+      console.log(isMoveAllowed(event, target));
       checkIfPlayerWon();
     });
+  });
+
+  choiceElements.finishTurnBtn.addEventListener("click", () => {
+    if (checkerState.movesMade === 0) {
+      alert("Must make at least one move");
+      return;
+    }
+
+    finishTurn();
   });
 };
 
 const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
+  console.log(checkerState);
+
   const fieldElTo = <HTMLDivElement>toEl.closest(".checker__field");
   const checkerElTo = <HTMLDivElement>fieldElTo.firstElementChild;
 
@@ -74,8 +86,15 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   const checkerElFrom = <HTMLDivElement>fieldElFrom.firstElementChild;
   const sideFrom = checkerElFrom.dataset.fieldside ? "black" : "red";
 
+  const activePlayer = checkerState.activePlayer;
+
+  if (sideFrom !== activePlayer) {
+    alert(`Cannot move only ${activePlayer} can move now`);
+    return false;
+  }
+
   if (checkerState.moveHistory.pop() === "one") {
-    alert("Cannot move anymore end turn");
+    alert("Cannot move anymore ending turn");
     return false;
   }
 
@@ -91,6 +110,7 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
     ) {
       checkerState.movesMade++;
 
+      console.log(checkerState);
       return true;
     }
 
