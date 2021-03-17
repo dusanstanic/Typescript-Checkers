@@ -16,10 +16,10 @@
   }
 
   &__item {
-    width: 80%;
+    width: 70%;
     text-align: center;
     position: relative;
-    padding-bottom: 80%;
+    padding-bottom: 70%;
     border-radius: 50%;
     border: none;
     overflow: hidden;
@@ -32,13 +32,13 @@
     cursor: pointer;
 
     @include respond(tab-port) {
-      width: 8%;
-      padding: 8%;
+      width: auto;
+      padding: 2rem;
+      border-radius: 0%;
+      margin: 0;
     }
 
     @include respond(phone) {
-      width: 12%;
-      padding: 12%;
     }
 
     &:focus {
@@ -63,6 +63,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    @include respond(tab-port) {
+      position: static;
+    }
   }
 }
 

@@ -9,6 +9,10 @@
 html {
   // This defines what 1rem is
   font-size: 62.5%;
+
+  @include respond(phone) {
+    font-size: 50%;
+  }
 }
 
 body {
@@ -27,7 +31,7 @@ body {
     minmax(4rem, 1fr);
 
   @include respond(tab-port) {
-    grid-template-rows: 15vh 75vh auto;
+    grid-template-rows: auto 80vh auto;
 
     grid-template-columns:
       minmax(4rem, 1fr)
