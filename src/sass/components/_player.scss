@@ -1,0 +1,32 @@
+.player {
+  grid-column: col-start 1 / col-end 15;
+
+  padding: 1rem;
+  background: rgba(231, 194, 113, 0.8);
+
+  &__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &__stat {
+    font-size: 2rem;
+  }
+
+  &__name {
+    color: rgb(198, 19, 19);
+
+    &--black {
+      color: black;
+    }
+  }
+
+  &__turn {
+    color: rgb(243, 0, 0);
+    font-size: 2rem;
+
+    &--black {
+      color: $color-black;
+    }
+  }
+}
