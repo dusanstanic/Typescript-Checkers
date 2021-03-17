@@ -5,14 +5,14 @@
   }
 
   &__field:nth-child(even) {
-    background: #dddddd;
+    background: rgb(208, 204, 204);
   }
 
   &__field:nth-child(odd) {
-    background: #858080;
+    background: rgb(174, 165, 165);
   }
 
-  background: rgb(205, 30, 30);
+  background: rgb(255, 0, 0);
   width: 50%;
   height: 60%;
   position: absolute;
@@ -21,7 +21,7 @@
   transform: translate(-50%, -50%);
   border-radius: 50%;
   cursor: grab;
-  border: 0.5rem solid rgb(225, 0, 0);
+  border: 0.4rem solid rgb(111, 13, 13);
 
   &--black {
     background-color: black;

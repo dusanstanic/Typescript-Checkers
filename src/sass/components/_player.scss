@@ -1,8 +1,8 @@
 .player {
-  grid-column: col-start 1 / col-end 15;
+  grid-column: sidebar-start / col-end 15;
 
   padding: 1rem;
-  background: rgba(231, 194, 113, 0.8);
+  background: rgb(232, 222, 232);
 
   &__stats {
     display: grid;
@@ -14,7 +14,8 @@
   }
 
   &__name {
-    color: rgb(198, 19, 19);
+    text-align: center;
+    color: rgb(255, 0, 0);
 
     &--black {
       color: black;
@@ -22,7 +23,7 @@
   }
 
   &__turn {
-    color: rgb(243, 0, 0);
+    color: rgb(255, 0, 0);
     font-size: 2rem;
 
     &--black {

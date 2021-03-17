@@ -13,6 +13,8 @@ html {
 
 body {
   box-sizing: border-box;
+
+  background: linear-gradient(to right, #ed213a, #93291e);
   display: grid;
   grid-template-rows: 80vh auto;
   grid-template-columns:
@@ -20,7 +22,7 @@ body {
     [sidebar-start]
     minmax(10rem, 16rem)
     [sidebar-end full-start]
-    repeat(15, [col-start] minmax(min-content, 8rem) [col-end])
+    repeat(15, [col-start] minmax(min-content, 7rem) [col-end])
     minmax(4rem, 1fr)
     [full-end];
 }
