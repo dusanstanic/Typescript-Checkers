@@ -75,7 +75,11 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   const coordinateFrom = +event.dataTransfer!.getData("text/plain");
   const coordinateTo = +fieldElTo.dataset.coordinate!;
   const fieldToHasChecker =
-    fieldElTo.dataset.ischeckerfield! === "true" ? true : false;
+    fieldElTo.dataset.isCheckerField! === "true" ? true : false;
+
+  console.log(fieldElTo.dataset);
+
+  console.log(fieldToHasChecker);
 
   const fieldElFrom = <HTMLDivElement>(
     document.querySelector(`[data-coordinate='${coordinateFrom}']`)

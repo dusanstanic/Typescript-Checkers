@@ -4,7 +4,7 @@ export const removeCheckerFromField = (coordinate: number) => {
   );
   const checker = <HTMLDivElement>field.firstElementChild;
 
-  field.dataset.ischeckerfield = "false";
+  field.dataset.isCheckerField = "false";
 
   checker.parentElement?.removeChild(checker);
 };
@@ -13,7 +13,7 @@ export const moveCheckerToField = (
   fieldTo: HTMLDivElement,
   checkerFrom: HTMLDivElement
 ) => {
-  fieldTo.dataset.ischeckerfield = "true";
+  fieldTo.dataset.isCheckerField = "true";
   checkerFrom.classList.add("active");
   fieldTo.append(checkerFrom);
 };
