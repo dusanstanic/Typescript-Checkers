@@ -1,10 +1,18 @@
-import { checkIfPlayerWon } from "../checkerState";
+import checkerState, { checkIfPlayerWon } from "../checkerState";
 interface MoveChecker {
   coordinateFrom: number;
   coordinateTo: number;
   fieldElTo: HTMLDivElement;
   checkerElFrom: HTMLDivElement;
   sideFrom: string;
+}
+
+interface Move {
+  moveDistance: number;
+  coordinateFrom: number;
+  fieldElTo: HTMLDivElement;
+  checkerElFrom: HTMLDivElement;
+  sideFrom?: string;
 }
 
 const controller = () => {
@@ -61,6 +69,21 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   const sideFrom = checkerElFrom.dataset.fieldside ? "black" : "red";
 
   if (!fieldToHasChecker) {
+    if (
+      moveChecker({
+        coordinateTo,
+        coordinateFrom,
+        fieldElTo,
+        checkerElFrom,
+        sideFrom,
+      })
+    ) {
+      checkerState.movesMade++;
+
+      return true;
+    }
+
+    return false;
   }
 
   alert("Place already has checker");
@@ -73,6 +96,59 @@ const moveChecker = ({
   fieldElTo,
   checkerElFrom,
   sideFrom,
-}: MoveChecker) => {};
+}: MoveChecker) => {
+  const moveOneSpaceOptions = [-9, 9, 11, -11];
+  const moveTwoSpaceOptions = [-18, 18, 22, -22];
+  const moveDistance = coordinateFrom - coordinateTo;
+
+  const isMoveSpaceValid = isMoveValid(moveDistance, moveOneSpaceOptions);
+
+  if (isMoveSpaceValid) {
+    return moveSpace({
+      checkerElFrom,
+      coordinateFrom,
+      fieldElTo,
+      moveDistance,
+    });
+  }
+
+  const isMoveTwoSpaceValid = isMoveValid(moveDistance, moveTwoSpaceOptions);
+
+  if (isMoveTwoSpaceValid) {
+    return moveTwoSpaces({
+      moveDistance,
+      checkerElFrom,
+      fieldElTo,
+      coordinateFrom,
+      sideFrom,
+    });
+  }
+
+  alert("Not moving by rules");
+  return false;
+};
+
+const moveSpace = ({
+  moveDistance,
+  checkerElFrom,
+  fieldElTo,
+  coordinateFrom,
+}: Move) => {
+  return true;
+};
+
+const moveTwoSpaces = ({
+  moveDistance,
+  checkerElFrom,
+  fieldElTo,
+  coordinateFrom,
+  sideFrom,
+}: Move) => {};
+
+const isMoveValid = (moveDistance: number, moveDistanceOptions: number[]) => {
+  return moveDistanceOptions.some((distance) => {
+    return distance === moveDistance;
+  });
+};
 
 export default controller;
