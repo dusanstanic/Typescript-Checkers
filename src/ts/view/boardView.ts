@@ -19,14 +19,11 @@ export const renderChessField = (
         </div>`;
   }
 
-  console.log("y");
-
   elements.board?.insertAdjacentHTML("beforeend", markup);
 };
 
 export const renderChessFields = (rows = 8, columns = 8) => {
-  checkerState.redCheckersCount = 12;
-  checkerState.blackCheckersCount = 12;
+  console.log(checkerState);
 
   for (let i = 1; i <= rows; i++) {
     const type = i >= 6 ? "black" : "red";
