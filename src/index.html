@@ -19,6 +19,29 @@
     <title>Checkers</title>
   </head>
   <body>
+    <nav class="choice">
+      <button class="choice__item">
+        <strong class="choice__text">New Game</strong>
+      </button>
+      <button class="choice__item choic__item--finish">
+        <strong class="choice__text">Finish Turn</strong>
+      </button>
+    </nav>
+
     <div class="board"></div>
+
+    <div class="player">
+      <div class="player__stats">
+        <div class="player__stat">
+          <div class="player__name">Player Info Red:</div>
+          <div class="player__amount">Amount:</div>
+        </div>
+        <div class="player__stat player__stat--black">
+          <div class="player__name player__name--black">Player Info Black:</div>
+          <div class="player__amount">Total:</div>
+        </div>
+      </div>
+      <div class="player__turn">Current Player:</div>
+    </div>
   </body>
 </html>
