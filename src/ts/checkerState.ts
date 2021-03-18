@@ -1,4 +1,5 @@
 interface CheckerState {
+  undo?: Function;
   moveHistory: string[];
   movesMade: number;
   activePlayer: string;
@@ -7,6 +8,7 @@ interface CheckerState {
 }
 
 const checkerInitialState: CheckerState = {
+  undo: undefined,
   moveHistory: [],
   movesMade: 0,
   activePlayer: "red",
@@ -17,6 +19,7 @@ const checkerInitialState: CheckerState = {
 let checkerState: CheckerState = { ...checkerInitialState };
 
 export const checkIfPlayerWon = () => {
+  console.log(checkerState);
   if (checkerState.redCheckersCount === 0) {
     alert("Player black won!");
   }

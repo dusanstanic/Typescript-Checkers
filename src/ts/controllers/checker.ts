@@ -1,8 +1,4 @@
-import {
-  removeCheckerFromField,
-  moveCheckerToField,
-  skipElement,
-} from "../view/checkerView";
+import { MoveOneSpaceCommand, MoveTwoSpaceCommand } from "../view/checkerView";
 import checkerState, { checkIfPlayerWon, finishTurn } from "../checkerState";
 import choiceElements from "../base/choiceBase";
 
@@ -66,6 +62,21 @@ const controller = () => {
 
     finishTurn();
   });
+
+  choiceElements.undoBtn.addEventListener("click", () => {
+    if (checkerState.undo) {
+      checkerState.undo();
+      checkerState.undo = undefined;
+
+      checkerState.movesMade--;
+      checkerState.moveHistory = [];
+
+      console.log(checkerState);
+      return;
+    }
+
+    alert("No undo can be done");
+  });
 };
 
 const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
@@ -82,8 +93,6 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   );
   const checkerElFrom = <HTMLDivElement>fieldElFrom.firstElementChild;
 
-  console.log(checkerElFrom.dataset);
-
   const sideFrom = checkerElFrom.dataset.fieldSide ? "black" : "red";
 
   const activePlayer = checkerState.activePlayer;
@@ -93,8 +102,8 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
     return false;
   }
 
-  if (checkerState.moveHistory.pop() === "one") {
-    alert("Cannot move anymore ending turn");
+  if (checkerState.moveHistory[checkerState.moveHistory.length - 1] === "one") {
+    alert("Cannot move anymore end turn");
     return false;
   }
 
@@ -183,8 +192,14 @@ const moveSpace = ({
 
   checkerState.moveHistory.push("one");
 
-  removeCheckerFromField(coordinateFrom);
-  moveCheckerToField(fieldElTo, checkerElFrom);
+  const moveSpaceCommand = new MoveOneSpaceCommand(
+    coordinateFrom,
+    fieldElTo,
+    checkerElFrom
+  );
+
+  moveSpaceCommand.execute();
+  checkerState.undo = moveSpaceCommand.undo;
 
   return true;
 };
@@ -198,6 +213,8 @@ const moveTwoSpaces = ({
 }: Move) => {
   if (!sideFrom) return false;
 
+  checkerState.moveHistory.push("two");
+
   if (
     (moveDistance === -22 && sideFrom === "red") ||
     (moveDistance === -22 && checkerElFrom.classList.contains("king"))
@@ -209,12 +226,16 @@ const moveTwoSpaces = ({
     }
 
     checkerState.blackCheckersCount--;
-    skipElement({
+
+    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
       coordinateFrom,
       coordinateSkipped,
       fieldElTo,
       checkerElFrom,
     });
+
+    moveTwoSpaceCommand.execute();
+    checkerState.undo = moveTwoSpaceCommand.undo;
 
     return true;
   }
@@ -230,12 +251,16 @@ const moveTwoSpaces = ({
     }
 
     checkerState.blackCheckersCount--;
-    skipElement({
+
+    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
       coordinateFrom,
       coordinateSkipped,
       fieldElTo,
       checkerElFrom,
     });
+
+    moveTwoSpaceCommand.execute();
+    checkerState.undo = moveTwoSpaceCommand.undo;
 
     return true;
   }
@@ -251,12 +276,16 @@ const moveTwoSpaces = ({
     }
 
     checkerState.redCheckersCount--;
-    skipElement({
+
+    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
       coordinateFrom,
       coordinateSkipped,
       fieldElTo,
       checkerElFrom,
     });
+
+    moveTwoSpaceCommand.execute();
+    checkerState.undo = moveTwoSpaceCommand.undo;
 
     return true;
   }
@@ -272,12 +301,16 @@ const moveTwoSpaces = ({
     }
 
     checkerState.redCheckersCount--;
-    skipElement({
+
+    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
       coordinateFrom,
       coordinateSkipped,
       fieldElTo,
       checkerElFrom,
     });
+
+    moveTwoSpaceCommand.execute();
+    checkerState.undo = moveTwoSpaceCommand.undo;
 
     return true;
   }
