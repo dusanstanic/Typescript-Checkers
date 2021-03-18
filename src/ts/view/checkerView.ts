@@ -134,7 +134,7 @@ class RemoveCheckerFromFieldCommand {
     this.field = <HTMLDivElement>(
       document.querySelector(`[data-coordinate='${coordinate}']`)
     );
-    console.log(this.field);
+
     this.checker = <HTMLDivElement>this.field.firstElementChild;
   }
 

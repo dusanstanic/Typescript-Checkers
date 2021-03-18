@@ -18,6 +18,13 @@ interface Move {
   sideFrom?: string;
 }
 
+enum Direction {
+  BottomRight,
+  BottomLeft,
+  TopRight,
+  TopLeft,
+}
+
 const controller = () => {
   const checkers = document.querySelectorAll(".checker")!;
   const fields = document.querySelectorAll(".checker__field")!;
@@ -146,13 +153,17 @@ const moveChecker = ({
   checkerElFrom,
   sideFrom,
 }: MoveChecker) => {
-  const moveOneSpaceOptions = [-9, 9, 11, -11];
-  const moveTwoSpaceOptions = [-18, 18, 22, -22];
   const moveDistance = coordinateFrom - coordinateTo;
 
-  const isMoveSpaceValid = isMoveValid(moveDistance, moveOneSpaceOptions);
+  const isMoveDistanceValid = isMoveValid(coordinateFrom, coordinateTo);
+  console.log(isMoveDistanceValid);
 
-  if (isMoveSpaceValid) {
+  if (!isMoveDistanceValid[0]) {
+    alert("Not moving by rules !");
+    return false;
+  }
+
+  if (isMoveDistanceValid[1] === "one") {
     return moveSpace({
       checkerElFrom,
       coordinateFrom,
@@ -161,10 +172,8 @@ const moveChecker = ({
     });
   }
 
-  const isMoveTwoSpaceValid = isMoveValid(moveDistance, moveTwoSpaceOptions);
-
-  if (isMoveTwoSpaceValid) {
-    return moveTwoSpaces({
+  if (isMoveDistanceValid[1] === "two") {
+    return moveTwoSpacesChecker({
       moveDistance,
       checkerElFrom,
       fieldElTo,
@@ -172,9 +181,6 @@ const moveChecker = ({
       sideFrom,
     });
   }
-
-  alert("Not moving by rules");
-  return false;
 };
 
 const moveSpace = ({
@@ -204,7 +210,7 @@ const moveSpace = ({
   return true;
 };
 
-const moveTwoSpaces = ({
+const moveTwoSpacesChecker = ({
   moveDistance,
   checkerElFrom,
   fieldElTo,
@@ -215,110 +221,140 @@ const moveTwoSpaces = ({
 
   checkerState.moveHistory.push("two");
 
-  if (
-    (moveDistance === -22 && sideFrom === "red") ||
-    (moveDistance === -22 && checkerElFrom.classList.contains("king"))
-  ) {
+  const direction = getDirection(moveDistance, sideFrom, checkerElFrom);
+
+  if (direction === Direction.BottomRight) {
     const coordinateSkipped = coordinateFrom + 11;
 
-    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
+    if (!isMoveTwoSpaceValid(coordinateSkipped, sideFrom)) {
       return false;
     }
 
     checkerState.blackCheckersCount--;
 
-    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
-      coordinateFrom,
-      coordinateSkipped,
-      fieldElTo,
+    return moveTwoSpaces({
       checkerElFrom,
+      coordinateFrom,
+      fieldElTo,
+      coordinateSkipped,
     });
+  }
 
-    moveTwoSpaceCommand.execute();
-    checkerState.undo = moveTwoSpaceCommand.undo;
+  if (direction === Direction.BottomLeft) {
+    const coordinateSkipped = coordinateFrom + 9;
 
-    return true;
+    if (!isMoveTwoSpaceValid(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.blackCheckersCount--;
+
+    return moveTwoSpaces({
+      checkerElFrom,
+      coordinateFrom,
+      fieldElTo,
+      coordinateSkipped,
+    });
+  }
+
+  if (direction === Direction.TopLeft) {
+    const coordinateSkipped = coordinateFrom - 11;
+
+    if (!isMoveTwoSpaceValid(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.redCheckersCount--;
+
+    return moveTwoSpaces({
+      checkerElFrom,
+      coordinateFrom,
+      fieldElTo,
+      coordinateSkipped,
+    });
+  }
+
+  if (direction === Direction.TopRight) {
+    const coordinateSkipped = coordinateFrom - 9;
+
+    if (!isMoveTwoSpaceValid(coordinateSkipped, sideFrom)) {
+      return false;
+    }
+
+    checkerState.redCheckersCount--;
+
+    return moveTwoSpaces({
+      checkerElFrom,
+      coordinateFrom,
+      fieldElTo,
+      coordinateSkipped,
+    });
+  }
+
+  return false;
+};
+
+type MoveTwoSpaces = {
+  checkerElFrom: HTMLDivElement;
+  fieldElTo: HTMLDivElement;
+  coordinateFrom: number;
+  coordinateSkipped: number;
+};
+
+const getDirection = (
+  moveDistance: number,
+  sideFrom: string,
+  checkerElFrom: HTMLDivElement
+) => {
+  if (
+    (moveDistance === -22 && sideFrom === "red") ||
+    (moveDistance === -22 && checkerElFrom.classList.contains("king"))
+  ) {
+    return Direction.BottomRight;
   }
 
   if (
     (moveDistance === -18 && sideFrom === "red") ||
     (moveDistance === -18 && checkerElFrom.classList.contains("king"))
   ) {
-    const coordinateSkipped = coordinateFrom + 9;
-
-    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
-      return false;
-    }
-
-    checkerState.blackCheckersCount--;
-
-    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
-      coordinateFrom,
-      coordinateSkipped,
-      fieldElTo,
-      checkerElFrom,
-    });
-
-    moveTwoSpaceCommand.execute();
-    checkerState.undo = moveTwoSpaceCommand.undo;
-
-    return true;
+    return Direction.BottomLeft;
   }
 
   if (
     (moveDistance === 22 && sideFrom === "black") ||
     (moveDistance === 22 && checkerElFrom.classList.contains("king"))
   ) {
-    const coordinateSkipped = coordinateFrom - 11;
-
-    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
-      return false;
-    }
-
-    checkerState.redCheckersCount--;
-
-    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
-      coordinateFrom,
-      coordinateSkipped,
-      fieldElTo,
-      checkerElFrom,
-    });
-
-    moveTwoSpaceCommand.execute();
-    checkerState.undo = moveTwoSpaceCommand.undo;
-
-    return true;
+    return Direction.TopLeft;
   }
 
   if (
     (moveDistance === 18 && sideFrom === "black") ||
     (moveDistance === 18 && checkerElFrom.classList.contains("king"))
   ) {
-    const coordinateSkipped = coordinateFrom - 9;
-
-    if (!checkIsSkipAllowed(coordinateSkipped, sideFrom)) {
-      return false;
-    }
-
-    checkerState.redCheckersCount--;
-
-    const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
-      coordinateFrom,
-      coordinateSkipped,
-      fieldElTo,
-      checkerElFrom,
-    });
-
-    moveTwoSpaceCommand.execute();
-    checkerState.undo = moveTwoSpaceCommand.undo;
-
-    return true;
+    return Direction.TopRight;
   }
-
-  return false;
 };
 
-const checkIsSkipAllowed = (coordinateSkipped: number, sideFrom: string) => {
+const moveTwoSpaces = ({
+  checkerElFrom,
+  fieldElTo,
+  coordinateFrom,
+  coordinateSkipped,
+}: MoveTwoSpaces) => {
+  const moveTwoSpaceCommand = new MoveTwoSpaceCommand({
+    coordinateFrom,
+    coordinateSkipped,
+    fieldElTo,
+    checkerElFrom,
+  });
+
+  moveTwoSpaceCommand.execute();
+  checkerState.undo = moveTwoSpaceCommand.undo;
+
+  return true;
+};
+
+const isMoveTwoSpaceValid = (coordinateSkipped: number, sideFrom: string) => {
   const fieldSkippedEl = <HTMLDivElement>(
     document.querySelector(`[data-coordinate='${coordinateSkipped}']`)
   );
@@ -339,7 +375,34 @@ const checkIsSkipAllowed = (coordinateSkipped: number, sideFrom: string) => {
   return true;
 };
 
-const isMoveValid = (moveDistance: number, moveDistanceOptions: number[]) => {
+const isMoveValid = (
+  coordinateFrom: number,
+  coordinateTo: number
+): [boolean, string] => {
+  const moveOneSpaceOptions = [-9, 9, 11, -11];
+  const moveTwoSpaceOptions = [-18, 18, 22, -22];
+  const moveDistance = coordinateFrom - coordinateTo;
+
+  const isMoveSpaceValid = isDistanceValid(moveDistance, moveOneSpaceOptions);
+  if (isMoveSpaceValid) {
+    return [true, "one"];
+  }
+
+  const isMoveTwoSpaceValid = isDistanceValid(
+    moveDistance,
+    moveTwoSpaceOptions
+  );
+  if (isMoveTwoSpaceValid) {
+    return [true, "two"];
+  }
+
+  return [false, ""];
+};
+
+const isDistanceValid = (
+  moveDistance: number,
+  moveDistanceOptions: number[]
+) => {
   return moveDistanceOptions.some((distance) => {
     return distance === moveDistance;
   });
