@@ -25,6 +25,20 @@ enum Direction {
   TopLeft,
 }
 
+enum OneSpaceDistance {
+  BottomRight = 11,
+  BottomLeft = 9,
+  TopRight = -9,
+  TopLeft = -11,
+}
+
+enum TwoSpaceDistance {
+  BottomRight = 22,
+  BottomLeft = 18,
+  TopRight = -18,
+  TopLeft = -22,
+}
+
 const controller = () => {
   const checkers = document.querySelectorAll(".checker")!;
   const fields = document.querySelectorAll(".checker__field")!;
@@ -153,7 +167,7 @@ const moveChecker = ({
   checkerElFrom,
   sideFrom,
 }: MoveChecker) => {
-  const moveDistance = coordinateFrom - coordinateTo;
+  const moveDistance = coordinateTo - coordinateFrom;
 
   const isMoveDistanceValid = isMoveValid(coordinateFrom, coordinateTo);
   console.log(isMoveDistanceValid);
@@ -306,30 +320,32 @@ const getDirection = (
   sideFrom: string,
   checkerElFrom: HTMLDivElement
 ) => {
+  const { TopRight, TopLeft, BottomRight, BottomLeft } = TwoSpaceDistance;
+
   if (
-    (moveDistance === -22 && sideFrom === "red") ||
-    (moveDistance === -22 && checkerElFrom.classList.contains("king"))
+    (moveDistance === BottomRight && sideFrom === "red") ||
+    (moveDistance === BottomRight && checkerElFrom.classList.contains("king"))
   ) {
     return Direction.BottomRight;
   }
 
   if (
-    (moveDistance === -18 && sideFrom === "red") ||
-    (moveDistance === -18 && checkerElFrom.classList.contains("king"))
+    (moveDistance === BottomLeft && sideFrom === "red") ||
+    (moveDistance === BottomLeft && checkerElFrom.classList.contains("king"))
   ) {
     return Direction.BottomLeft;
   }
 
   if (
-    (moveDistance === 22 && sideFrom === "black") ||
-    (moveDistance === 22 && checkerElFrom.classList.contains("king"))
+    (moveDistance === TopLeft && sideFrom === "black") ||
+    (moveDistance === TopLeft && checkerElFrom.classList.contains("king"))
   ) {
     return Direction.TopLeft;
   }
 
   if (
-    (moveDistance === 18 && sideFrom === "black") ||
-    (moveDistance === 18 && checkerElFrom.classList.contains("king"))
+    (moveDistance === TopRight && sideFrom === "black") ||
+    (moveDistance === TopRight && checkerElFrom.classList.contains("king"))
   ) {
     return Direction.TopRight;
   }
@@ -379,8 +395,21 @@ const isMoveValid = (
   coordinateFrom: number,
   coordinateTo: number
 ): [boolean, string] => {
-  const moveOneSpaceOptions = [-9, 9, 11, -11];
-  const moveTwoSpaceOptions = [-18, 18, 22, -22];
+  const { BottomLeft, BottomRight, TopLeft, TopRight } = OneSpaceDistance;
+  const {
+    TopRight: TopRightTwo,
+    TopLeft: TopLeftTwo,
+    BottomRight: BottomRightTwo,
+    BottomLeft: BottomLeftTwo,
+  } = TwoSpaceDistance;
+
+  const moveOneSpaceOptions = [BottomLeft, BottomRight, TopLeft, TopRight];
+  const moveTwoSpaceOptions = [
+    TopRightTwo,
+    TopLeftTwo,
+    BottomRightTwo,
+    BottomLeftTwo,
+  ];
   const moveDistance = coordinateFrom - coordinateTo;
 
   const isMoveSpaceValid = isDistanceValid(moveDistance, moveOneSpaceOptions);
