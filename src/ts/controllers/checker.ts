@@ -12,10 +12,7 @@ interface MoveChecker {
 
 interface Move {
   moveDistance: number;
-  coordinateFrom: number;
-  fieldElTo: HTMLDivElement;
-  checkerElFrom: HTMLDivElement;
-  sideFrom?: string;
+  moveChecker: MoveChecker;
 }
 
 enum Direction {
@@ -129,15 +126,15 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   }
 
   if (!fieldToHasChecker) {
-    if (
-      moveChecker({
-        coordinateTo,
-        coordinateFrom,
-        fieldElTo,
-        checkerElFrom,
-        sideFrom,
-      })
-    ) {
+    const moveCheckerObj: MoveChecker = {
+      coordinateTo,
+      coordinateFrom,
+      fieldElTo,
+      checkerElFrom,
+      sideFrom,
+    };
+
+    if (moveChecker(moveCheckerObj)) {
       checkerState.movesMade++;
 
       if (sideFrom === "black" && coordinateTo >= 10 && coordinateTo <= 17) {
@@ -160,14 +157,15 @@ const isMoveAllowed = (event: DragEvent, toEl: HTMLDivElement) => {
   return false;
 };
 
-const moveChecker = ({
-  coordinateFrom,
-  coordinateTo,
-  fieldElTo,
-  checkerElFrom,
-  sideFrom,
-}: MoveChecker) => {
+const moveChecker = (moveCheckerObj: MoveChecker) => {
+  const { coordinateFrom, coordinateTo } = moveCheckerObj;
+
   const moveDistance = coordinateTo - coordinateFrom;
+
+  const move: Move = {
+    moveChecker: moveCheckerObj,
+    moveDistance: moveDistance,
+  };
 
   const isMoveDistanceValid = isMoveValid(coordinateFrom, coordinateTo);
   console.log(isMoveDistanceValid);
@@ -178,31 +176,19 @@ const moveChecker = ({
   }
 
   if (isMoveDistanceValid[1] === "one") {
-    return moveSpace({
-      checkerElFrom,
-      coordinateFrom,
-      fieldElTo,
-      moveDistance,
-    });
+    return moveSpace(move);
   }
 
   if (isMoveDistanceValid[1] === "two") {
-    return moveTwoSpacesChecker({
-      moveDistance,
-      checkerElFrom,
-      fieldElTo,
-      coordinateFrom,
-      sideFrom,
-    });
+    return moveTwoSpacesChecker(move);
   }
 };
 
-const moveSpace = ({
-  moveDistance,
-  checkerElFrom,
-  fieldElTo,
-  coordinateFrom,
-}: Move) => {
+const moveSpace = (move: Move) => {
+  const {
+    moveChecker: { checkerElFrom, coordinateFrom, fieldElTo },
+  } = move;
+
   if (checkerState.movesMade > 0) {
     alert(
       "Cannot move by one space anymore check and see if skips are possible end turn if not"
@@ -224,19 +210,17 @@ const moveSpace = ({
   return true;
 };
 
-const moveTwoSpacesChecker = ({
-  moveDistance,
-  checkerElFrom,
-  fieldElTo,
-  coordinateFrom,
-  sideFrom,
-}: Move) => {
-  if (!sideFrom) return false;
+const moveTwoSpacesChecker = (move: Move) => {
+  const {
+    moveDistance,
+    moveChecker: { checkerElFrom, coordinateFrom, fieldElTo, sideFrom },
+  } = move;
 
   checkerState.moveHistory.push("two");
 
   const direction = getDirection(moveDistance, sideFrom, checkerElFrom);
   let coordinateSkipped = 0;
+  const { BottomLeft, BottomRight, TopLeft, TopRight } = OneSpaceDistance;
 
   if (direction === Direction.BottomRight) {
     coordinateSkipped = coordinateFrom + 11;
